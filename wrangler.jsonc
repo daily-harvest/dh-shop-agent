@@ -1,0 +1,26 @@
+{
+  "name": "dh-shop-agent",
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./server.ts",
+  "assets": {
+    "directory": "./build/client"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "upload_source_maps": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dh-shop-agent",
+      "database_id": "dd7c96d5-6117-4674-bd53-402f3cf5b28d"  // This placeholder will be replaced during deployment
+    }
+  ],
+  "vars": {
+    "SHOPIFY_API_KEY": "your_api_key_here", // Don't use this in production, use secrets in the dashboard https://developers.cloudflare.com/workers/configuration/secrets/#adding-secrets-to-your-project
+    "SHOPIFY_API_SECRET": "your_api_secret_here", // Don't use this in production, use secrets in the dashboard https://developers.cloudflare.com/workers/configuration/secrets/#adding-secrets-to-your-project
+    "SHOPIFY_APP_URL": "https://example.workers.dev", // adjust as needed
+    "SCOPES": "write_products" // adjust scopes as needed
+  }
+}
