@@ -228,98 +228,98 @@ export async function initializeDb(db: D1Database) {
 
     // Create Session table (from 20240530213853_create_session_table)
     await db.exec(`
-      CREATE TABLE IF NOT EXISTS "Session" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "shop" TEXT NOT NULL,
-        "state" TEXT NOT NULL,
-        "isOnline" BOOLEAN NOT NULL DEFAULT false,
-        "scope" TEXT,
-        "expires" DATETIME,
-        "accessToken" TEXT NOT NULL,
-        "userId" BIGINT,
-        "firstName" TEXT,
-        "lastName" TEXT,
-        "email" TEXT,
-        "accountOwner" BOOLEAN NOT NULL DEFAULT false,
-        "locale" TEXT,
-        "collaborator" BOOLEAN DEFAULT false,
-        "emailVerified" BOOLEAN DEFAULT false
+      CREATE TABLE IF NOT EXISTS Session (
+        id TEXT NOT NULL PRIMARY KEY,
+        shop TEXT NOT NULL,
+        state TEXT NOT NULL,
+        isOnline BOOLEAN NOT NULL DEFAULT false,
+        scope TEXT,
+        expires DATETIME,
+        accessToken TEXT NOT NULL,
+        userId BIGINT,
+        firstName TEXT,
+        lastName TEXT,
+        email TEXT,
+        accountOwner BOOLEAN NOT NULL DEFAULT false,
+        locale TEXT,
+        collaborator BOOLEAN DEFAULT false,
+        emailVerified BOOLEAN DEFAULT false
       )
     `);
     
     // Create CustomerToken table (from 20250501044923_add_customer_tokens_table)
     await db.exec(`
-      CREATE TABLE IF NOT EXISTS "CustomerToken" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "conversationId" TEXT NOT NULL,
-        "accessToken" TEXT NOT NULL,
-        "refreshToken" TEXT,
-        "expiresAt" DATETIME NOT NULL,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL
+      CREATE TABLE IF NOT EXISTS CustomerToken (
+        id TEXT NOT NULL PRIMARY KEY,
+        conversationId TEXT NOT NULL,
+        accessToken TEXT NOT NULL,
+        refreshToken TEXT,
+        expiresAt DATETIME NOT NULL,
+        createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME NOT NULL
       )
     `);
     
     await db.exec(`
-      CREATE INDEX IF NOT EXISTS "CustomerToken_conversationId_idx" ON "CustomerToken"("conversationId")
+      CREATE INDEX IF NOT EXISTS CustomerToken_conversationId_idx ON CustomerToken(conversationId)
     `);
     
     // Create CodeVerifier table (from 20250502141909_add_code_verifier_table)
     await db.exec(`
-      CREATE TABLE IF NOT EXISTS "CodeVerifier" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "state" TEXT NOT NULL,
-        "verifier" TEXT NOT NULL,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "expiresAt" DATETIME NOT NULL
+      CREATE TABLE IF NOT EXISTS CodeVerifier (
+        id TEXT NOT NULL PRIMARY KEY,
+        state TEXT NOT NULL,
+        verifier TEXT NOT NULL,
+        createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        expiresAt DATETIME NOT NULL
       )
     `);
     
     await db.exec(`
-      CREATE UNIQUE INDEX IF NOT EXISTS "CodeVerifier_state_key" ON "CodeVerifier"("state")
+      CREATE UNIQUE INDEX IF NOT EXISTS CodeVerifier_state_key ON CodeVerifier(state)
     `);
     
     await db.exec(`
-      CREATE INDEX IF NOT EXISTS "CodeVerifier_state_idx" ON "CodeVerifier"("state")
+      CREATE INDEX IF NOT EXISTS CodeVerifier_state_idx ON CodeVerifier(state)
     `);
     
     // Create Conversation and Message tables (from 20250508000001_add_conversation_tables)
     await db.exec(`
-      CREATE TABLE IF NOT EXISTS "Conversation" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL
+      CREATE TABLE IF NOT EXISTS Conversation (
+        id TEXT NOT NULL PRIMARY KEY,
+        createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME NOT NULL
       )
     `);
     
     await db.exec(`
-      CREATE TABLE IF NOT EXISTS "Message" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "conversationId" TEXT NOT NULL,
-        "role" TEXT NOT NULL,
-        "content" TEXT NOT NULL,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT "Message_conversationId_fkey" FOREIGN KEY ("conversationId") REFERENCES "Conversation" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+      CREATE TABLE IF NOT EXISTS Message (
+        id TEXT NOT NULL PRIMARY KEY,
+        conversationId TEXT NOT NULL,
+        role TEXT NOT NULL,
+        content TEXT NOT NULL,
+        createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        CONSTRAINT Message_conversationId_fkey FOREIGN KEY (conversationId) REFERENCES Conversation (id) ON DELETE CASCADE ON UPDATE CASCADE
       )
     `);
     
     await db.exec(`
-      CREATE INDEX IF NOT EXISTS "Message_conversationId_idx" ON "Message"("conversationId")
+      CREATE INDEX IF NOT EXISTS Message_conversationId_idx ON Message(conversationId)
     `);
     
     // Create CustomerAccountUrl table (from 20250520000001_add_customer_account_url_table)
     await db.exec(`
-      CREATE TABLE IF NOT EXISTS "CustomerAccountUrl" (
-        "id" TEXT NOT NULL PRIMARY KEY,
-        "conversationId" TEXT NOT NULL,
-        "url" TEXT NOT NULL,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL
+      CREATE TABLE IF NOT EXISTS CustomerAccountUrl (
+        id TEXT NOT NULL PRIMARY KEY,
+        conversationId TEXT NOT NULL,
+        url TEXT NOT NULL,
+        createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME NOT NULL
       )
     `);
     
     await db.exec(`
-      CREATE UNIQUE INDEX IF NOT EXISTS "CustomerAccountUrl_conversationId_key" ON "CustomerAccountUrl"("conversationId")
+      CREATE UNIQUE INDEX IF NOT EXISTS CustomerAccountUrl_conversationId_key ON CustomerAccountUrl(conversationId)
     `);
 
     // Set the global DB instance
