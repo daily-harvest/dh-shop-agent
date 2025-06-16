@@ -95,10 +95,7 @@ export async function storeCodeVerifier(db: D1Database, state: string, verifier:
   const id = `cv_${Date.now()}`;
 
   try {
-    const query = `
-      INSERT INTO codeVerifier (id, state, verifier, expiresAt) 
-      VALUES (?, ?, ?, ?)
-    `;
+    const query = `INSERT INTO codeVerifier (id, state, verifier, expiresAt) VALUES (?, ?, ?, ?)`;
     await executeQuery(db, query, [id, state, verifier, expiresAt.toISOString()]);
     
     return { id, state, verifier, expiresAt };
@@ -117,11 +114,7 @@ export async function storeCodeVerifier(db: D1Database, state: string, verifier:
 export async function getCodeVerifier(db: D1Database, state: string): Promise<CodeVerifier | null> {
   try {
     const now = new Date().toISOString();
-    const query = `
-      SELECT * FROM codeVerifier 
-      WHERE state = ? AND expiresAt > ?
-      LIMIT 1
-    `;
+    const query = `SELECT * FROM codeVerifier WHERE state = ? AND expiresAt > ? LIMIT 1`;
     
     const verifier = await getFirstRow(db, query, [state, now]) as CodeVerifier;
 
@@ -182,8 +175,7 @@ export async function storeCustomerToken(
     const id = `ct_${Date.now()}`;
     await executeQuery(
       db,
-      `INSERT INTO customerToken (id, conversationId, accessToken, expiresAt, createdAt, updatedAt) 
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO customerToken (id, conversationId, accessToken, expiresAt, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?)`,
       [id, conversationId, accessToken, expiresAt.toISOString(), now.toISOString(), now.toISOString()]
     );
     
