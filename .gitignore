@@ -7,3 +7,4 @@ node_modules
 
 .wrangler
 .DS_Store
+package-lock.json
